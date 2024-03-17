@@ -48,21 +48,25 @@ const Page = () => {
         title: 'Calendar 1',
         start: new Date(2024, 2, 20, 15, 0, 0), //03:00 PM
         end: new Date(2024, 2, 20, 16, 30, 0), //04:30 PM
+        description: '123', 
       },
       {
         title: 'Calendar 2 ',
         start: new Date(2024, 2, 21, 12, 30, 0), //08:30 AM
         end: new Date(2024, 2, 21, 18, 0, 0), //18:00 PM
+        description: 'dddd', 
       },
       {
         title: 'Calendar 3 ',
         start: new Date(2024, 2, 22, 10, 30, 0), //10:30 AM
         end: new Date(2024, 2, 22, 19, 0, 0), //07:00 PM
+        description: '3333', 
       },
       {
         title: 'Calendar 4 ',
         start: new Date(2024, 2, 23, 7, 30, 0), //08:30 AM
         end: new Date(2024, 2, 23, 11, 0, 0), //11:00 AM
+        description: 'xxxx', 
       },
     ],
   });
@@ -76,10 +80,11 @@ const Page = () => {
 
   const onSelectSlot = (event: any) => {
     const { start, end } = event;
+    console.log(event);
     
     setCurrent({
-      title: '',
-      description: '',
+      title: event?.title || '',
+      description: event?.description || '',
       start: new Date(start),
       end: moment(end).add(30, 'minutes').toDate(),
     });
@@ -103,7 +108,7 @@ const Page = () => {
         messages={controls}
         date={config.date}
         onNavigate={onHandleDate}
-        onDoubleClickEvent={(event) => console.log('key press', event)}
+        onDoubleClickEvent={onSelectSlot}
         onSelectSlot={onSelectSlot}
         selectable
       />

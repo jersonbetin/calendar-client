@@ -10,6 +10,7 @@ import {
 } from '@nextui-org/react';
 import { Controller, useForm } from 'react-hook-form';
 import { IEvent } from '@interfaces/event.interface';
+import { useEffect } from 'react';
 
 interface EventModalProps {
   isOpen: boolean;
@@ -37,6 +38,7 @@ const EventModal = ({
   const {
     control,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<FormEvent>({
     defaultValues: {
@@ -46,11 +48,15 @@ const EventModal = ({
       description: event?.description || '',
     },
   });
-  console.log(event);
 
   const onSave = (event: FormEvent) => {
     console.log(event);
   };
+
+  useEffect(() => {
+    setValue('title', event?.title || '');
+    setValue('description', event?.description || '');
+  }, [event]);
 
   return (
     <Modal

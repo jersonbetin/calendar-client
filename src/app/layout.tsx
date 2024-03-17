@@ -1,13 +1,15 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-import UiProvider from "@/providers/UiProvider";
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import { Toaster } from 'react-hot-toast';
 
-const inter = Inter({ subsets: ["latin"] });
+import './globals.css';
+import UiProvider from '@/providers/UiProvider';
+
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: "Etyalab",
-  description: "",
+  title: 'Etyalab',
+  description: '',
 };
 
 export default function RootLayout({
@@ -17,7 +19,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}><UiProvider>{children}</UiProvider></body>
+      <body className={inter.className}>
+        <UiProvider>{children}</UiProvider>
+        <Toaster position="bottom-right" />
+      </body>
     </html>
   );
 }

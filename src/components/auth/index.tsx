@@ -9,7 +9,7 @@ import {
 } from '@nextui-org/react';
 import { useState } from 'react';
 import SignUp from './SingUp';
-import Login from './login';
+import Login from './Login';
 
 const AuthorizationPanel = () => {
   const [selected, setSelected] = useState<string>('login');

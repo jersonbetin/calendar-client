@@ -19,10 +19,6 @@ const AuthContext = createContext<IAuthContext>({});
 export function AuthContextProvider({ children }: { children: ReactNode }) {
   const [auth, setAuth] = useState<IAuth | null>(null);
 
-  useEffect(() => {
-    console.log('llego', auth);
-  }, [auth]);
-
   return (
     <AuthContext.Provider value={{ auth, setAuth }}>
       {children}

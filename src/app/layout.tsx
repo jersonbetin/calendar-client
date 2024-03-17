@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import { Toaster } from 'react-hot-toast';
 
 import './globals.css';
+import "react-big-calendar/lib/css/react-big-calendar.css";
 import UiProvider from '@/providers/UiProvider';
 import { AuthContextProvider } from '@/contexts/user.context';
 import AppProvider from '@/providers/AppProvider';

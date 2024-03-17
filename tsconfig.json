@@ -22,6 +22,7 @@
       "@/*": ["*"],
       "@interfaces/*": ["interfaces/*"],
       "@services/*": ["services/*"],
+      "@components/*": ["components/*"],
       "@utils/*": ["utils/*"]
     }
   },

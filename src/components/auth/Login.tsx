@@ -10,7 +10,7 @@ import { faLock } from '@fortawesome/free-solid-svg-icons';
 
 import { IAuthData, ILoginData } from '@interfaces/auth.interface';
 import { authService } from '@services/index';
-import { TOKEN_COOKIE } from '@/utils/constants';
+import { TOKEN_COOKIE } from '@utils/constants';
 
 interface LoginProps {
   onChangePage: Dispatch<string>;

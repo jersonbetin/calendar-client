@@ -11,6 +11,7 @@ import { faLock } from '@fortawesome/free-solid-svg-icons';
 import { IAuthData, ILoginData } from '@interfaces/auth.interface';
 import { authService } from '@services/index';
 import { TOKEN_COOKIE } from '@utils/constants';
+import { useAuthContext } from '@/contexts/user.context';
 
 interface LoginProps {
   onChangePage: Dispatch<string>;
@@ -27,12 +28,14 @@ const Login = ({ onChangePage }: LoginProps) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const { push } = useRouter();
+  const { setAuth } = useAuthContext();
 
   const onLogin = async (data: IAuthData) => {
     setLoading(true);
     try {
       const response: ILoginData = await authService.login(data);
       Cookie.set(TOKEN_COOKIE, response.token);
+      setAuth?.(response.user);
 
       push('/dashboard');
       toast.success('Bienvenido!!');

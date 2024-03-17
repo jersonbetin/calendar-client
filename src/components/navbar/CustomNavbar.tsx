@@ -1,6 +1,4 @@
 'use client';
-import useLogout from '@/hooks/auth/useLogout';
-import { PUBLIC_URL } from '@/utils/constants';
 import { faCalendar } from '@fortawesome/free-regular-svg-icons';
 import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -15,10 +13,14 @@ import {
   ListboxItem,
 } from '@nextui-org/react';
 
-const CustomNavbar = () => {
+import { useAuthContext } from '@/contexts/user.context';
+import useLogout from '@/hooks/useLogout';
+import { PUBLIC_URL } from '@/utils/constants';
 
+const CustomNavbar = () => {
   const { logout } = useLogout();
-  
+  const { auth } = useAuthContext();
+
   const RenderAvatarDropdown = () => {
     return (
       <Dropdown placement="left-end">
@@ -44,7 +46,7 @@ const CustomNavbar = () => {
               key="profile"
               className="h-14 gap-2 opacity-100"
             >
-              correo
+              {auth?.email}
             </DropdownItem>
           </DropdownSection>
 
@@ -80,7 +82,7 @@ const CustomNavbar = () => {
         >
           <FontAwesomeIcon icon={faCalendar} />
         </ListboxItem>
-        <ListboxItem key="avatar" className='data-[hover=true]:border-none'>
+        <ListboxItem key="avatar" className="data-[hover=true]:border-none">
           <div className="flex justify-center items-center w-full h-[50px]">
             <RenderAvatarDropdown />
           </div>

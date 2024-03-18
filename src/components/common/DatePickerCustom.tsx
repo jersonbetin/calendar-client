@@ -33,7 +33,6 @@ const DatePickerCustom = ({ start, end }: { start: Date; end: Date }) => {
         applyCallback={(startDate: Date, endDate: Date) =>
           console.log(startDate, endDate)
         }
-        rangeCallback={() => console.log(';;;;')}
       >
         <Input
           label="Fecha"

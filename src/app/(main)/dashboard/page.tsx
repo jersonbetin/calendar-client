@@ -47,11 +47,20 @@ const Page = () => {
     events: [],
   });
 
-  const onHandleDate = (value: Date) => {
-    setConfig({
-      ...config,
-      date: moment(value),
-    });
+  const onHandleDate = async (value: Date, view: View) => {
+    try {
+      const response = await eventService.getEvents({
+        start: moment(value).startOf('month').toDate(),
+        end: moment(value).endOf('month').toDate(),
+      });
+      setConfig({
+        ...config,
+        events: response,
+        date: moment(value),
+      });
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const onSelectSlot = (event: any) => {
@@ -142,10 +151,6 @@ const Page = () => {
     getEvents();
   }, []);
 
-  useEffect(() => {
-    console.log(config);
-  }, [config.view]);
-
   return (
     <div className="w-full p-12">
       <h1 className="mb-2 text-2xl font-bold">Calendario</h1>
@@ -156,8 +161,8 @@ const Page = () => {
         view={config.view}
         defaultView={config.view}
         onView={(view) => {
-          console.log(view)
-          setConfig({ ...config, view })}}
+          setConfig({ ...config, view });
+        }}
         events={config.events.map((event: IEvent) => ({
           ...event,
           start: moment(event.startDate).toDate(),

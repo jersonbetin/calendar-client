@@ -11,6 +11,7 @@ import 'moment/locale/es';
 import { IEvent } from '@interfaces/event.interface';
 import EventModal from '@/components/dashboard/EventModal';
 import { useDisclosure } from '@nextui-org/react';
+import DatePickerCustom from '@/components/common/DatePickerCustom';
 
 const localizer = momentLocalizer(moment);
 
@@ -45,28 +46,32 @@ const Page = () => {
     date: moment(),
     events: [
       {
+        id: 1,
         title: 'Calendar 1',
         start: new Date(2024, 2, 20, 15, 0, 0), //03:00 PM
         end: new Date(2024, 2, 20, 16, 30, 0), //04:30 PM
-        description: '123', 
+        description: '123',
       },
       {
+        id: 2,
         title: 'Calendar 2 ',
         start: new Date(2024, 2, 21, 12, 30, 0), //08:30 AM
         end: new Date(2024, 2, 21, 18, 0, 0), //18:00 PM
-        description: 'dddd', 
+        description: 'dddd',
       },
       {
+        id: 3,
         title: 'Calendar 3 ',
         start: new Date(2024, 2, 22, 10, 30, 0), //10:30 AM
         end: new Date(2024, 2, 22, 19, 0, 0), //07:00 PM
-        description: '3333', 
+        description: '3333',
       },
       {
+        id: 4,
         title: 'Calendar 4 ',
         start: new Date(2024, 2, 23, 7, 30, 0), //08:30 AM
         end: new Date(2024, 2, 23, 11, 0, 0), //11:00 AM
-        description: 'xxxx', 
+        description: 'xxxx',
       },
     ],
   });
@@ -80,9 +85,10 @@ const Page = () => {
 
   const onSelectSlot = (event: any) => {
     const { start, end } = event;
-    console.log(event);
-    
+    // console.log(event);
+
     setCurrent({
+      id: event.id,
       title: event?.title || '',
       description: event?.description || '',
       start: new Date(start),

@@ -11,6 +11,15 @@ import {
 import { Controller, useForm } from 'react-hook-form';
 import { IEvent } from '@interfaces/event.interface';
 import { useEffect } from 'react';
+import DatePicker from 'react-tailwindcss-datetimepicker';
+import moment from 'moment';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCalendar } from '@fortawesome/free-regular-svg-icons';
+import { faCancel, faTrash } from '@fortawesome/free-solid-svg-icons';
+
+// import 'react-tailwindcss-datetimepicker/style.css';
+
+// import moment from 'moment';
 
 interface EventModalProps {
   isOpen: boolean;
@@ -24,8 +33,10 @@ interface EventModalProps {
 
 interface FormEvent {
   title: string;
-  end: Date;
-  start: Date;
+  date: {
+    end: Date;
+    start: Date;
+  };
   description: string;
 }
 
@@ -43,11 +54,14 @@ const EventModal = ({
   } = useForm<FormEvent>({
     defaultValues: {
       title: event?.title || '',
-      end: event?.end,
-      start: event?.start,
+      date: {
+        end: event?.end,
+        start: event?.start,
+      },
       description: event?.description || '',
     },
   });
+  const now = new Date();
 
   const onSave = (event: FormEvent) => {
     console.log(event);
@@ -62,9 +76,12 @@ const EventModal = ({
     <Modal
       size="md"
       isOpen={isOpen}
-      onChange={onOpenChange}
+      // onChange={onOpenChange}
       onClose={onClose}
+      placement="top"
       aria-label="modal-event"
+      backdrop="blur"
+      classNames={{ base: 'overflow-y-visible' }}
     >
       <ModalContent className="p-3">
         <ModalHeader className="justify-center">Formulario Evento</ModalHeader>
@@ -103,13 +120,84 @@ const EventModal = ({
                 />
               )}
             />
+            <Controller
+              name="date"
+              control={control}
+              rules={{
+                required: { value: true, message: 'Debe ingresar un titulo' },
+              }}
+              render={({ field }) => (
+                <DatePicker
+                  ranges={{
+                    Today: [
+                      field.value?.start || new Date(),
+                      field.value?.end || new Date(),
+                    ],
+                    'Last 30 Days': [
+                      new Date(
+                        now.getFullYear(),
+                        now.getMonth() - 1,
+                        now.getDate(),
+                        0,
+                        0,
+                        0,
+                        0,
+                      ),
+                      new Date(field.value?.end || ''),
+                    ],
+                  }}
+                  twelveHoursClock
+                  displayMaxDate
+                  classNames={{ rootContainer: '!z-[1000000000]' }}
+                  start={field.value?.start || new Date()}
+                  end={field.value?.end || new Date()}
+                  applyCallback={(startDate: Date, endDate: Date) => {
+                    field.onChange({
+                      end: endDate,
+                      start: startDate,
+                    });
+                  }}
+                >
+                  <Input
+                    label="Fecha"
+                    type="text"
+                    name="end-start"
+                    isReadOnly
+                    value={`${moment(field.value?.start).format(
+                      'DD/MM/YYYY hh:mm:ss',
+                    )} - ${moment(field.value?.end).format(
+                      'DD/MM/YYYY hh:mm:ss',
+                    )}`}
+                  />
+                </DatePicker>
+              )}
+            />
           </div>
         </ModalBody>
         <ModalFooter>
-          <Button onClick={handleSubmit(onSave)} color="secondary">
-            Agregar
+          <Button
+            onClick={handleSubmit(onSave)}
+            color="secondary"
+            startContent={<FontAwesomeIcon icon={faCalendar} />}
+          >
+           {event?.id ? 'Update' :'Agregar'}
           </Button>
-          <Button color="danger">Cancelar</Button>
+          {event?.id && (
+            <Button
+              color="danger"
+              onClick={onClose}
+              startContent={<FontAwesomeIcon icon={faTrash} />}
+            >
+              Eliminar
+            </Button>
+          )}
+          <Button
+            color="primary"
+            onClick={onClose}
+            startContent={<FontAwesomeIcon icon={faCancel} />}
+          >
+            Cancelar
+          </Button>
         </ModalFooter>
       </ModalContent>
     </Modal>

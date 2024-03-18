@@ -16,6 +16,7 @@
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@nextui-org/react": "^2.2.10",
     "axios": "^1.6.8",
+    "dayjs": "^1.11.10",
     "framer-motion": "^11.0.14",
     "js-cookie": "^3.0.5",
     "moment": "^2.30.1",
@@ -25,6 +26,7 @@
     "react-dom": "^18",
     "react-hook-form": "^7.51.0",
     "react-hot-toast": "^2.4.1",
+    "react-tailwindcss-datetimepicker": "^3.0.3",
     "uuid": "^9.0.1"
   },
   "devDependencies": {

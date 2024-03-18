@@ -35,10 +35,6 @@ const controls = {
 
   showMore: (total: any) => `+${total} más`,
 };
-// const initEvent: IEvent = {
-//   title: '',
-//   description: '',
-// };
 
 const Page = () => {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
@@ -146,6 +142,10 @@ const Page = () => {
     getEvents();
   }, []);
 
+  useEffect(() => {
+    console.log(config);
+  }, [config.view]);
+
   return (
     <div className="w-full p-12">
       <h1 className="mb-2 text-2xl font-bold">Calendario</h1>
@@ -155,14 +155,14 @@ const Page = () => {
         defaultDate={new Date()}
         view={config.view}
         defaultView={config.view}
-        onView={(view) => setConfig({ ...config, view })}
+        onView={(view) => {
+          console.log(view)
+          setConfig({ ...config, view })}}
         events={config.events.map((event: IEvent) => ({
           ...event,
-          start: event.startDate,
-          end: event.endDate,
+          start: moment(event.startDate).toDate(),
+          end: moment(event.endDate).toDate(),
         }))}
-        startAccessor="start"
-        endAccessor="end"
         className="w-full h-full"
         messages={controls}
         date={config.date}

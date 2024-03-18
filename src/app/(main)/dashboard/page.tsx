@@ -1,17 +1,19 @@
 'use client';
+import { useEffect, useState } from 'react';
+import { useDisclosure } from '@nextui-org/react';
+import moment from 'moment';
 import {
   Calendar,
   CalendarProps,
   momentLocalizer,
   View,
 } from 'react-big-calendar';
-import moment from 'moment';
-import { useState } from 'react';
+
 import 'moment/locale/es';
 import { IEvent } from '@interfaces/event.interface';
-import EventModal from '@/components/dashboard/EventModal';
-import { useDisclosure } from '@nextui-org/react';
-import DatePickerCustom from '@/components/common/DatePickerCustom';
+import EventModal from '@components/dashboard/EventModal';
+import { eventService } from '@/services';
+import toast from 'react-hot-toast';
 
 const localizer = momentLocalizer(moment);
 
@@ -40,40 +42,13 @@ const controls = {
 
 const Page = () => {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+  const [saving, setSaving] = useState<boolean>();
+  const [deleting, setDeleting] = useState<boolean>();
   const [current, setCurrent] = useState<IEvent | undefined>(undefined);
   const [config, setConfig] = useState<ICalendarState>({
     view: 'month',
     date: moment(),
-    events: [
-      {
-        id: 1,
-        title: 'Calendar 1',
-        start: new Date(2024, 2, 20, 15, 0, 0), //03:00 PM
-        end: new Date(2024, 2, 20, 16, 30, 0), //04:30 PM
-        description: '123',
-      },
-      {
-        id: 2,
-        title: 'Calendar 2 ',
-        start: new Date(2024, 2, 21, 12, 30, 0), //08:30 AM
-        end: new Date(2024, 2, 21, 18, 0, 0), //18:00 PM
-        description: 'dddd',
-      },
-      {
-        id: 3,
-        title: 'Calendar 3 ',
-        start: new Date(2024, 2, 22, 10, 30, 0), //10:30 AM
-        end: new Date(2024, 2, 22, 19, 0, 0), //07:00 PM
-        description: '3333',
-      },
-      {
-        id: 4,
-        title: 'Calendar 4 ',
-        start: new Date(2024, 2, 23, 7, 30, 0), //08:30 AM
-        end: new Date(2024, 2, 23, 11, 0, 0), //11:00 AM
-        description: 'xxxx',
-      },
-    ],
+    events: [],
   });
 
   const onHandleDate = (value: Date) => {
@@ -84,18 +59,92 @@ const Page = () => {
   };
 
   const onSelectSlot = (event: any) => {
-    const { start, end } = event;
-    // console.log(event);
+    const { start } = event;
 
     setCurrent({
       id: event.id,
       title: event?.title || '',
       description: event?.description || '',
-      start: new Date(start),
-      end: moment(end).add(30, 'minutes').toDate(),
+      startDate: new Date(start),
+      endDate: moment(start).add(30, 'minutes').toDate(),
     });
     onOpen();
   };
+
+  const getEvents = async (
+    start = moment().startOf('month').toDate(),
+    end = moment().endOf('month').toDate(),
+  ) => {
+    try {
+      const response = await eventService.getEvents({ start, end });
+      setConfig({
+        ...config,
+        events: response,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const onHandleSave = async (event: IEvent) => {
+    setSaving(true);
+    try {
+      const response = await eventService.saveEvents(event);
+      setConfig({
+        ...config,
+        events: [...config.events, response],
+      });
+
+      onClose();
+      toast.success('Evento guardado con exito');
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const onHandleUpdate = async (event: IEvent) => {
+    setSaving(true);
+    try {
+      const response = await eventService.updateEvents(event);
+      setConfig({
+        ...config,
+        events: [
+          ...config.events.filter((item) => item.id !== event.id),
+          response,
+        ],
+      });
+
+      onClose();
+      toast.success('Evento actualizado con exito');
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const onHandleDelete = async (id: number) => {
+    setDeleting(true);
+    try {
+      await eventService.deleteEvent(id);
+      setConfig({
+        ...config,
+        events: config.events.filter((event) => event.id !== id),
+      });
+      onClose();
+      toast.success('Evento eliminado con exito');
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  useEffect(() => {
+    getEvents();
+  }, []);
 
   return (
     <div className="w-full p-12">
@@ -107,7 +156,11 @@ const Page = () => {
         view={config.view}
         defaultView={config.view}
         onView={(view) => setConfig({ ...config, view })}
-        events={config.events}
+        events={config.events.map((event: IEvent) => ({
+          ...event,
+          start: event.startDate,
+          end: event.endDate,
+        }))}
         startAccessor="start"
         endAccessor="end"
         className="w-full h-full"
@@ -123,6 +176,11 @@ const Page = () => {
         onClose={onClose}
         onOpenChange={onOpenChange}
         event={current}
+        onSave={onHandleSave}
+        saveLoading={saving}
+        onDelete={onHandleDelete}
+        deleteLoading={deleting}
+        onUpdate={onHandleUpdate}
       />
     </div>
   );

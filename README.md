@@ -4,7 +4,8 @@ https://github.com/jersonbetin/calendar-client/assets/3371455/903ab94f-efd5-4548
 
   <p align="center"><b>Calendar </b> is a proyect created to create a event calendar.</p>
 
-https://github.com/jersonbetin/calendar-client/assets/3371455/0bcc6529-d287-42dd-8fe8-652541c32a18
+![18 03 2024_14 27 37_REC-ezgif com-effects](https://github.com/jersonbetin/calendar-client/assets/3371455/cfdce6e3-5b23-4a95-a5d0-d0fc12bcadbf)
+
 
   
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)

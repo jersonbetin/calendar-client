@@ -30,13 +30,13 @@ This section should list any major frameworks/libraries used to bootstrap your p
 
 ## Getting Started
 
-First, clone your project:
+1, clone your project:
 ```bash
 git clone git@github.com:jersonbetin/etyalab-client.git
 
 ```
 
-Second, install dependencies:
+2, install dependencies:
 
 ```bash
 npm i
@@ -44,7 +44,14 @@ npm i
 yarn intall
 ```
 
-Thirst, run the development server:
+3, Enter your API in `.env`
+
+```bash
+  NEXT_PUBLIC_API_ETYALAB=
+```
+
+
+4, Run the development server:
 
 ```bash
 npm run dev

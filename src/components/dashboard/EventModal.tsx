@@ -27,8 +27,12 @@ interface EventModalProps {
   onClose: () => void;
   // eslint-disable-next-line no-unused-vars
   onHandleConfirm?: Function;
-  loading?: boolean;
   event?: IEvent;
+  onSave: Function;
+  onUpdate?: Function;
+  onDelete: Function;
+  saveLoading?: boolean;
+  deleteLoading?: boolean;
 }
 
 interface FormEvent {
@@ -45,6 +49,11 @@ const EventModal = ({
   isOpen,
   onClose,
   onOpenChange,
+  onSave,
+  saveLoading,
+  deleteLoading,
+  onDelete,
+  onUpdate,
 }: EventModalProps) => {
   const {
     control,
@@ -55,21 +64,35 @@ const EventModal = ({
     defaultValues: {
       title: event?.title || '',
       date: {
-        end: event?.end,
-        start: event?.start,
+        end: event?.endDate,
+        start: event?.startDate,
       },
       description: event?.description || '',
     },
   });
   const now = new Date();
 
-  const onSave = (event: FormEvent) => {
-    console.log(event);
+  const onHandleSave = (current: FormEvent) => {
+    const data: IEvent = {
+      title: current?.title,
+      startDate: current.date.start,
+      endDate: current.date.end,
+      description: current?.description,
+    };
+    if (event?.id) {
+      onUpdate?.({ id: event.id, ...data });
+    } else {
+      onSave(data);
+    }
   };
 
   useEffect(() => {
     setValue('title', event?.title || '');
     setValue('description', event?.description || '');
+    setValue('date', {
+      end: event?.endDate || new Date(),
+      start: event?.startDate || new Date(),
+    });
   }, [event]);
 
   return (
@@ -176,16 +199,20 @@ const EventModal = ({
         </ModalBody>
         <ModalFooter>
           <Button
-            onClick={handleSubmit(onSave)}
+            onClick={handleSubmit(onHandleSave)}
             color="secondary"
+            isLoading={saveLoading}
             startContent={<FontAwesomeIcon icon={faCalendar} />}
           >
-           {event?.id ? 'Update' :'Agregar'}
+            {event?.id ? 'Update' : 'Agregar'}
           </Button>
           {event?.id && (
             <Button
               color="danger"
-              onClick={onClose}
+              isLoading={deleteLoading}
+              onClick={() => {
+                onDelete(event.id);
+              }}
               startContent={<FontAwesomeIcon icon={faTrash} />}
             >
               Eliminar
